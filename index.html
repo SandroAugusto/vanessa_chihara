@@ -60,10 +60,20 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,250,246,.94);backdro
 .bar{display:flex;align-items:center;justify-content:space-between;gap:14px;height:64px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand img{width:40px;height:auto}
-.brand span{font-family:Georgia,serif;font-size:18px;letter-spacing:.06em}
+.brand span{font-family:Georgia,serif;font-size:18px;letter-spacing:.06em;white-space:nowrap}
 nav{display:none;gap:26px;font-size:15px}
 nav a{text-decoration:none;color:var(--muted)}
 nav a:hover{color:var(--wine)}
+.bar-right{display:flex;align-items:center;gap:10px}
+/* section links on narrow screens: a menu button that opens the same links */
+header details.menu{position:relative;border:0;padding:0}
+header .menu summary{display:flex;align-items:center;justify-content:center;gap:0;width:44px;height:44px;border:1px solid var(--line);border-radius:10px;color:var(--wine)}
+header .menu summary:after,header .menu[open] summary:after{content:none;display:none}
+.menu[open] summary{background:var(--sand)}
+.menu summary svg{width:22px;height:22px}
+.menu-panel{display:flex;flex-direction:column;gap:0;position:absolute;top:calc(100% + 10px);right:0;min-width:230px;padding:8px;background:var(--cream);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(68,36,44,.16);font-size:16px}
+.menu-panel a{padding:12px 14px;border-radius:8px;color:var(--wine)}
+.menu-panel a:hover{background:var(--sand)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:10px 22px;border-radius:10px;font-weight:600;font-size:16px;text-decoration:none;transition:transform .15s,background .15s}
 .btn svg{width:20px;height:20px;flex:none}
 .btn:hover{transform:translateY(-1px)}
@@ -129,8 +139,13 @@ footer .credit{margin-top:14px;font-size:13px;opacity:.8}
 .sticky{position:fixed;left:0;right:0;bottom:0;z-index:9;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(255,250,246,.96);border-top:1px solid var(--line)}
 .sticky .btn{width:100%}
 
+/* On the narrowest phones the name, the button and the menu do not fit on one line: the header button goes, and the sticky bar at the bottom keeps the booking link. */
+@media (max-width:430px){
+  header .btn-sm{display:none}
+}
 @media (min-width:860px){
   nav{display:flex}
+  .menu{display:none}
   .hero{padding:72px 0 80px}
   .hero-grid{grid-template-columns:1.25fr .75fr;gap:56px}
   .portrait{width:100%;max-width:360px;justify-self:end}
@@ -159,7 +174,20 @@ footer .credit{margin-top:14px;font-size:13px;opacity:.8}
       <a href="#onde">Onde atende</a>
       <a href="#duvidas">Dúvidas</a>
     </nav>
-    <a class="btn btn-primary btn-sm" href="https://wa.me/5511940537860?text=Ol%C3%A1%2C%20Dra.%20Vanessa!%20Gostaria%20de%20agendar%20uma%20consulta." target="_blank" rel="noopener noreferrer">Agendar</a>
+    <div class="bar-right">
+      <a class="btn btn-primary btn-sm" href="https://wa.me/5511940537860?text=Ol%C3%A1%2C%20Dra.%20Vanessa!%20Gostaria%20de%20agendar%20uma%20consulta." target="_blank" rel="noopener noreferrer">Agendar</a>
+      <details class="menu">
+        <summary aria-label="Menu">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </summary>
+        <nav class="menu-panel" aria-label="Seções">
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#onde">Onde atende</a>
+          <a href="#duvidas">Dúvidas</a>
+        </nav>
+      </details>
+    </div>
   </div>
 </header>
 
@@ -263,6 +291,13 @@ footer .credit{margin-top:14px;font-size:13px;opacity:.8}
 <div class="sticky">
   <a class="btn btn-primary" href="https://wa.me/5511940537860?text=Ol%C3%A1%2C%20Dra.%20Vanessa!%20Gostaria%20de%20agendar%20uma%20consulta." target="_blank" rel="noopener noreferrer">Agendar pelo WhatsApp</a>
 </div>
+
+<script>
+/* The menu opens without JavaScript (it is a <details>); this only closes it after a link is followed or on Escape. */
+(function(){var m=document.querySelector('.menu');if(!m)return;
+m.addEventListener('click',function(e){if(e.target.closest('a'))m.open=false});
+m.addEventListener('keydown',function(e){if(e.key==='Escape')m.open=false});})();
+</script>
 
 </body>
 </html>
